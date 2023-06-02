@@ -27,13 +27,7 @@ if __name__ == '__main__':
 
         # Preprocess the data
         # gedha ya azer
-        training_dataset, validation_dataset, target_classes = build_features(
-            data_dir=DATA_DIR,
-            img_height=IMG_HEIGHT,
-            img_width=IMG_WIDTH,
-            batch_size=BATCH_SIZE,
-            validation_split=VALIDATION_SPLIT
-        )
+        training_dataset, validation_dataset, target_classes = build_features()
 
         # Load the model
         model = cnn(IMG_SIZE, len(target_classes))
