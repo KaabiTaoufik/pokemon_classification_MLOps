@@ -5,3 +5,7 @@ tensorflow
 keras
 google
 mlflow
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation
+opentelemetry-distro
