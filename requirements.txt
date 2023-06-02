@@ -3,7 +3,5 @@ pandas
 matplotlib
 tensorflow
 keras
-cv2
-os
 google
-kaggle
+mlflow
