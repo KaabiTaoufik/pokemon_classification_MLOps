@@ -7,13 +7,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def evaluate_model(model: tf.keras.Model, val_ds: tf.data.Dataset):
+def evaluate_model(model: tf.keras.Model, validation_dataset: tf.data.Dataset):
     with mlflow.start_run():
         # Log the model architecture
         mlflow.keras.log_model(model, "model")
 
         # Evaluate the model on the test set
-        loss, accuracy, precision, recall, auc = model.evaluate(val_ds)
+
+        loss, accuracy, precision, recall, auc = model.evaluate(validation_dataset)
         print(f"Test loss: {loss:.4f}")
         print(f"Test accuracy: {accuracy:.4f}")
         print(f"Test precision: {precision:.4f}")
