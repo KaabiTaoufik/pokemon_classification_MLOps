@@ -1,6 +1,7 @@
-from constants import *
-from models.train_model import cnn, train_model
-from mlflow_setup import setup_mlflow
+from src.constants import *
+from src.models.train_model import cnn, train_model
+from src.mlflow_setup import setup_mlflow
+from src.features.build_features import build_features
 
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
@@ -26,7 +27,6 @@ if __name__ == '__main__':
 
 
         # Preprocess the data
-        # gedha ya azer
         training_dataset, validation_dataset, target_classes = build_features()
 
         # Load the model

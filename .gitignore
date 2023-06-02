@@ -90,3 +90,6 @@ target/
 
 #virtualenv
 pokemon_classifier
+
+#MLflow runs
+mlruns/

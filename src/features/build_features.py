@@ -1,14 +1,13 @@
 import os,random,shutil
+from  src.constants import IMG_SIZE
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 def build_features():
-    os.system('mkdir data/train')
-    os.system('mv data/PokemonData/* data/train/')
-    os.system('mkdir data/test')
+    os.makedirs('data/train', exist_ok=True)
+    os.system('cp -r data/PokemonData/* data/train/')
+    os.makedirs('data/test', exist_ok=True)
     os.system('cp -r data/train/* data/test/')
     os.system("find data/test -name '*.*' -type f -delete")
-    os.system("find data/test -name '*.*' -type f -delete")
-    os.rmdir('data/PokemonData')
     train_dir = 'data/train'
     test_dir = 'data/test'
 
@@ -18,20 +17,19 @@ def build_features():
         prep_test_data(poke, train_dir, test_dir)
         
     target_classes = os.listdir(train_dir)
-    image_size = (64, 64, 3)
     datagen=ImageDataGenerator(rescale = 1./255,
                             shear_range=0.2,
                             zoom_range=0.2,
                             horizontal_flip=True,
                             )
     training_set=datagen.flow_from_directory(train_dir,
-                                            target_size=image_size[:2],
+                                            target_size=IMG_SIZE[:2],
                                             batch_size=32,
                                             class_mode='categorical',
                                             color_mode='rgb'
                                             )
     validation_set=datagen.flow_from_directory(test_dir,
-                                            target_size=image_size[:2],
+                                            target_size=IMG_SIZE[:2],
                                             batch_size=32,
                                             class_mode='categorical',
                                             color_mode='rgb'
