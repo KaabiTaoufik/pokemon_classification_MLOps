@@ -1,5 +1,4 @@
 import tensorflow as tf
-from tensorflow.keras.metrics import Accuracy, Recall, AUC
 import mlflow
 
 def evaluate_model(model: tf.keras.Model, validation_dataset: tf.data.Dataset):
