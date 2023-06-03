@@ -1,21 +1,31 @@
 import os,random,shutil
 from  src.constants import IMG_SIZE
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from sklearn.model_selection import train_test_split
+
 
 def build_features():
-    os.makedirs('data/train', exist_ok=True)
-    os.system('cp -r data/PokemonData/* data/train/')
-    os.makedirs('data/test', exist_ok=True)
-    os.system('cp -r data/train/* data/test/')
-    os.system("find data/test -name '*.*' -type f -delete")
+    raw_data_dir = 'data/PokemonData'
     train_dir = 'data/train'
     test_dir = 'data/test'
+    file_list = []
+    for root,dirs,files in os.walk(raw_data_dir):
+        for file in files:
+            file_path = os.path.join(root, file)
+            file_list.append(file_path)
 
-    # Copying 15 random images from train folders to test folders
+    train_files, test_files = train_test_split(file_list, test_size=0.2, random_state=42)
 
-    for poke in os.listdir(train_dir):
-        prep_test_data(poke, train_dir, test_dir)
-        
+    for file in train_files:
+        dest_path = file.replace(raw_data_dir, train_dir)
+        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+        shutil.copy2(file, dest_path)
+
+    for file in test_files:
+        dest_path = file.replace(raw_data_dir, test_dir)
+        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+        shutil.copy2(file, dest_path)
+
     target_classes = os.listdir(train_dir)
     datagen=ImageDataGenerator(rescale = 1./255,
                             shear_range=0.2,
@@ -35,13 +45,3 @@ def build_features():
                                             color_mode='rgb'
                                             )
     return training_set,validation_set, target_classes
-
-def prep_test_data(pokemon, train_dir, test_dir):
-    pop = os.listdir(train_dir+'/'+pokemon)
-    test_data=random.sample(pop, 15)
-    print(test_data)
-    for f in test_data:
-        shutil.copy(train_dir+'/'+pokemon+'/'+f, test_dir+'/'+pokemon+'/')
-
-if __name__ == '__main__':
-    build_features()
