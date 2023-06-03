@@ -8,6 +8,7 @@ def build_features():
     raw_data_dir = 'data/PokemonData'
     train_dir = 'data/train'
     test_dir = 'data/test'
+    validation_dir = 'data/validation'
     file_list = []
     for root,dirs,files in os.walk(raw_data_dir):
         for file in files:
@@ -16,6 +17,8 @@ def build_features():
 
     train_files, test_files = train_test_split(file_list, test_size=0.2, random_state=42)
 
+    train_files, validation_files = train_test_split(train_files, test_size=0.2, random_state=42)
+
     for file in train_files:
         dest_path = file.replace(raw_data_dir, train_dir)
         os.makedirs(os.path.dirname(dest_path), exist_ok=True)
@@ -23,6 +26,11 @@ def build_features():
 
     for file in test_files:
         dest_path = file.replace(raw_data_dir, test_dir)
+        os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+        shutil.copy2(file, dest_path)
+
+    for file in validation_files:
+        dest_path = file.replace(raw_data_dir, validation_dir)
         os.makedirs(os.path.dirname(dest_path), exist_ok=True)
         shutil.copy2(file, dest_path)
 
@@ -38,10 +46,16 @@ def build_features():
                                             class_mode='categorical',
                                             color_mode='rgb'
                                             )
-    validation_set=datagen.flow_from_directory(test_dir,
+    test_set=datagen.flow_from_directory(test_dir,
                                             target_size=IMG_SIZE[:2],
                                             batch_size=32,
                                             class_mode='categorical',
                                             color_mode='rgb'
                                             )
-    return training_set,validation_set, target_classes
+    validation_set=datagen.flow_from_directory(validation_dir,
+                                            target_size=IMG_SIZE[:2],
+                                            batch_size=32,
+                                            class_mode='categorical',
+                                            color_mode='rgb'
+                                            )
+    return training_set,test_set, target_classes, validation_set

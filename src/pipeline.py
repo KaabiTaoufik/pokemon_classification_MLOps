@@ -14,17 +14,17 @@ from src.models.train_model import cnn
 from src.visualization.visualize import plot_history
 
 # Setup OpenTelemetry
-# provider = TracerProvider()
-# processor = BatchSpanProcessor(ConsoleSpanExporter())
-# provider.add_span_processor(processor)
-# trace.set_tracer_provider(provider)
-# tracer = trace.get_tracer(__name__)
+provider = TracerProvider()
+processor = BatchSpanProcessor(ConsoleSpanExporter())
+provider.add_span_processor(processor)
+trace.set_tracer_provider(provider)
+tracer = trace.get_tracer(__name__)
 
 if __name__ == '__main__':
-    # with tracer.start_as_current_span("main"):
+    with tracer.start_as_current_span("main"):
         initiate_mlflow_experiment(EXPERIMENT)
-        training_dataset, validation_dataset, target_classes = build_features()
+        training_dataset, test_dataset, target_classes, validation_set = build_features()
         model = cnn(IMG_SIZE, len(target_classes))
-        trained_model, history = train_model(model, training_dataset, validation_dataset,  EPOCHS)
-        evaluate_model(trained_model, validation_dataset)
+        trained_model, history = train_model(model, training_dataset, test_dataset, EPOCHS)
+        evaluate_model(trained_model, validation_set)
         plot_history(history)
